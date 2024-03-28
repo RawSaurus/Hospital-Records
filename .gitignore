@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /TODO.txt
-/properties.yml
+src/main/java/resources/properties.yml
