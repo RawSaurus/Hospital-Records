@@ -16,5 +16,8 @@ public class Hospital {
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
+
+
 }
