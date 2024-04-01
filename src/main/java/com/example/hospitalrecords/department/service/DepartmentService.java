@@ -3,7 +3,9 @@ package com.example.hospitalrecords.department.service;
 import com.example.hospitalrecords.department.model.Department;
 import com.example.hospitalrecords.department.repository.DepartmentRepository;
 import com.example.hospitalrecords.hospital.model.Hospital;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
