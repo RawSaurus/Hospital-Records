@@ -1,17 +1,18 @@
-package com.example.hospitalrecords.controller;
+package com.example.hospitalrecords.doctor.controller;
 
-import com.example.hospitalrecords.model.Doctor;
-import com.example.hospitalrecords.repository.DoctorRepository;
+import com.example.hospitalrecords.doctor.model.Doctor;
+import com.example.hospitalrecords.doctor.repository.DoctorRepository;
+import com.example.hospitalrecords.doctor.service.DoctorService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/doctors")
 public class DoctorController {
 
-    private DoctorRepository doctorRepository;
+    private final DoctorService doctorService;
 
-    public DoctorController(DoctorRepository doctorRepository){
-        this.doctorRepository = doctorRepository;
+    public DoctorController(DoctorService doctorService){
+        this.doctorService = doctorService;
     }
 
     @GetMapping
@@ -21,29 +22,17 @@ public class DoctorController {
 
     @PostMapping
     public Doctor postDoctor(@RequestBody Doctor doctor){
-        return doctorRepository.save(doctor);
+        return doctorService.saveDoctor(doctor);
     }
 
     @PutMapping("/{id}")
     public Doctor updateDoctorById(@PathVariable Long id, @RequestBody Doctor doctor){
-        Doctor updatedDoctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor Not Found"));
-
-        updatedDoctor.setName(doctor.getName());
-        updatedDoctor.setSurname(doctor.getSurname());
-        updatedDoctor.setTitle(doctor.getTitle());
-
-        return doctorRepository.save(updatedDoctor);
+        return doctorService.updateDoctorById(id, doctor);
     }
 
     @DeleteMapping("/{id}")
     public String deleteDoctorById(@PathVariable Long id){
-        if(doctorRepository.existsById(id)){
-            doctorRepository.deleteById(id);
-            return "Doctor deleted successfully";
-        }
-        else
-            throw new RuntimeException("Doctor Not Found");
+        return doctorService.deleteDoctorById(id);
     }
 
 }

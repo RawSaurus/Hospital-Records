@@ -1,10 +1,11 @@
-package com.example.hospitalrecords.model;
+package com.example.hospitalrecords.doctor.model;
 
+import com.example.hospitalrecords.department.model.Department;
+import com.example.hospitalrecords.patient.model.Patient;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.HashSet;
 import java.util.Set;

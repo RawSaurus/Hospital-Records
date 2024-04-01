@@ -1,18 +1,18 @@
-package com.example.hospitalrecords.controller;
+package com.example.hospitalrecords.department.controller;
 
-import com.example.hospitalrecords.model.Department;
-import com.example.hospitalrecords.repository.DepartmentRepository;
-import org.springframework.data.domain.Example;
+import com.example.hospitalrecords.department.model.Department;
+import com.example.hospitalrecords.department.repository.DepartmentRepository;
+import com.example.hospitalrecords.department.service.DepartmentService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/departments")
 public class DepartmentController {
 
-    private DepartmentRepository departmentRepository;
+    private final DepartmentService departmentService;
 
-    public DepartmentController(DepartmentRepository departmentRepository){
-       this.departmentRepository = departmentRepository;
+    public DepartmentController(DepartmentService departmentService){
+       this.departmentService = departmentService;
     }
 
     @GetMapping
@@ -22,26 +22,17 @@ public class DepartmentController {
 
     @PostMapping
     public Department postDepartment(@RequestBody Department department){
-        return departmentRepository.save(department);
+        return departmentService.saveDepartment(department);
     }
 
     @PutMapping("/{id}")
     public Department updateDepartmentById(@PathVariable Long id, Department department){
-        Department updatedDepartment = departmentRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Department Not Found"));
-
-        updatedDepartment.setName(department.getName());
-        return departmentRepository.save(updatedDepartment);
+        return departmentService.updateDepartmentById(id, department);
     }
 
     @DeleteMapping("/{id}")
     public String deleteDepartmentById(@PathVariable Long id){
-        if(departmentRepository.existsById(id)){
-            departmentRepository.deleteById(id);
-            return "Department deleted successfully";
-        }
-        else
-            throw new RuntimeException("Department Not Found");
+        return departmentService.deleteDepartmentById(id);
     }
 
 }

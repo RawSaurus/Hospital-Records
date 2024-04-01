@@ -1,6 +1,7 @@
-package com.example.hospitalrecords.model;
+package com.example.hospitalrecords.department.model;
 
 import com.example.hospitalrecords.hospital.model.Hospital;
+import com.example.hospitalrecords.doctor.model.Doctor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

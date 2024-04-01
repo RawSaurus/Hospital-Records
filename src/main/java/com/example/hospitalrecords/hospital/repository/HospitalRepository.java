@@ -1,9 +1,7 @@
-package com.example.hospitalrecords.repository;
+package com.example.hospitalrecords.hospital.repository;
 
-import com.example.hospitalrecords.model.Hospital;
+import com.example.hospitalrecords.hospital.model.Hospital;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 

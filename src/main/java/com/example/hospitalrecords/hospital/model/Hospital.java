@@ -1,11 +1,11 @@
-package com.example.hospitalrecords.model;
+package com.example.hospitalrecords.hospital.model;
 
+import com.example.hospitalrecords.department.model.Department;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Data
@@ -18,7 +18,8 @@ public class Hospital {
     @GeneratedValue
     private Long hospitalId;
     private String name;
-    @OneToMany(mappedBy = "hospital")
+    @OneToMany(mappedBy = "hospital",
+    fetch = FetchType.LAZY)
     private Set<Department> departments;
 
     @Override

@@ -1,84 +1,47 @@
-package com.example.hospitalrecords.controller;
+package com.example.hospitalrecords.hospital.controller;
 
-import com.example.hospitalrecords.model.Department;
-import com.example.hospitalrecords.model.Hospital;
-import com.example.hospitalrecords.repository.DepartmentRepository;
-import com.example.hospitalrecords.repository.HospitalRepository;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import com.example.hospitalrecords.hospital.service.HospitalService;
+import com.example.hospitalrecords.department.model.Department;
+import com.example.hospitalrecords.hospital.model.Hospital;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/hospitals")
 public class HospitalController {
 
-    private HospitalRepository hospitalRepository;
-    private DepartmentRepository deptRepository;
+    private final HospitalService hospitalService;
 
-    public HospitalController(HospitalRepository hospitalRepository, DepartmentRepository deptRepository){
-       this.hospitalRepository = hospitalRepository;
-       this.deptRepository = deptRepository;
+    public HospitalController(HospitalService hospitalService) {
+        this.hospitalService = hospitalService;
     }
 
-    @GetMapping("/hospital")
+    @GetMapping()
     public String welcome(){
         return "Welcome in da Hospital";
     }
 
-    @GetMapping("/hospitals/{id}")
+    @GetMapping()
     public String getHospital(@PathVariable Long id){
-        return hospitalRepository.getReferenceById(id).toString();
+        return hospitalService.findById(id).toString();
     }
 
-    @GetMapping("/hospitals")
+    @GetMapping()
     public List<Hospital> findAllHospitals(){
-        return hospitalRepository.findAll();
+        return hospitalService.findAll();
     }
-    @PostMapping("/hospitals")
+    @PostMapping()
     public Hospital postHospital(@RequestBody Hospital hospital){
-        return hospitalRepository.save(hospital);
+        return hospitalService.saveHospital(hospital);
     }
-
-    @PutMapping("/hospitals/{id}/add-department/{dept-id}")
-    public Hospital addDepartment(@PathVariable Long id, @PathVariable(name = "dept-id") Long deptId){
-        Hospital hospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
-
-        Department addedDepartment = deptRepository.findById(deptId)
-                .orElseThrow(() -> new RuntimeException("Department Not Found"));
-
-        hospital.addDepartment(addedDepartment);
-
-        return hospitalRepository.save(hospital);
-    }
-
-    @PutMapping("hospitals/{id}")
+    @PutMapping("/{id}")
     public Hospital updateHospital(@PathVariable Long id, @RequestBody Hospital hospital){
-       Hospital updateHospital = hospitalRepository.findById(id)
-               .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
-
-       updateHospital.setName(hospital.getName());
-
-       return hospitalRepository.save(updateHospital);
+       return hospitalService.updateHospital(id, hospital);
     }
-
-    @DeleteMapping("hospitalsu/{id}")
-    public String deleteHospital(@PathVariable Long id){
-        if(hospitalRepository.existsById(id)) {
-            hospitalRepository.deleteById(id);
-            return "Hospital deleted successfully";
-        }
-        else
-            throw new RuntimeException("Hospital Not Found");
-    }
-
-    @DeleteMapping("hospitals/{id}")
+    @DeleteMapping("/{id}")
     public String deleteHospital2(@PathVariable Long id){
-        Hospital deleteHospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
-
-        hospitalRepository.delete(deleteHospital);
-
-        return "Hospital deleted successfully";
+        return hospitalService.deleteHospital(id);
     }
 }

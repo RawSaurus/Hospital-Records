@@ -1,5 +1,6 @@
-package com.example.hospitalrecords.model;
+package com.example.hospitalrecords.patient.model;
 
+import com.example.hospitalrecords.doctor.model.Doctor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,12 @@ public class Patient {
     private String email;
     private double height;
     private double weight;
-    @ManyToMany(mappedBy = "patients")//TODO JOIN TABLE
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "Diagnosis",
+            joinColumns = {@JoinColumn(name = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "doctorId")}
+    )
     private Set<Doctor> doctors = new HashSet<>();
 
 }
