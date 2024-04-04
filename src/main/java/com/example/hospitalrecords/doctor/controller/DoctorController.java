@@ -5,6 +5,9 @@ import com.example.hospitalrecords.doctor.repository.DoctorRepository;
 import com.example.hospitalrecords.doctor.service.DoctorService;
 import org.springframework.web.bind.annotation.*;
 
+/**Controller used to declare endpoints
+ * @RequestMapping specifies path for all methods
+ * endpoints can have same path if http methods are different*/
 @RestController
 @RequestMapping("/doctors")
 public class DoctorController {
