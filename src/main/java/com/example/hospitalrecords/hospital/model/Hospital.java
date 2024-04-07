@@ -1,11 +1,13 @@
 package com.example.hospitalrecords.hospital.model;
 
 import com.example.hospitalrecords.department.model.Department;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,16 +20,23 @@ public class Hospital {
     @GeneratedValue
     private Long hospitalId;
     private String name;
-    @OneToMany(mappedBy = "hospital",
-    fetch = FetchType.LAZY)
-    private Set<Department> departments;
+    @OneToMany(mappedBy = "hospital")
+    @JsonManagedReference
+    private List<Department> departments;
 
     @Override
     public String toString(){
         return "This is hospital: " + getName();
     }
 
-    public void addDepartment(Department department){
-        departments.add(department);
-    }
+    /**\/hospital
+     * Logo, motto, name, address, contact(phone, fax, email, socials)
+     * pictures(more details url)
+     * List<Services>
+     * News, List of last ten announcements
+     * Google map API
+     *
+     * /hospital/history
+     * name, text, pictures, source*/
+
 }

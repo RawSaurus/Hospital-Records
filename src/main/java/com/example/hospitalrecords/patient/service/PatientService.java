@@ -1,5 +1,6 @@
 package com.example.hospitalrecords.patient.service;
 
+import com.example.hospitalrecords.patient.mapper.PatientMapper;
 import com.example.hospitalrecords.patient.model.Patient;
 import com.example.hospitalrecords.patient.repository.PatientRepository;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Service;
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
 
-    public PatientService(PatientRepository patientRepository){
+    public PatientService(PatientRepository patientRepository, PatientMapper patientMapper){
         this.patientRepository = patientRepository;
+        this.patientMapper = patientMapper;
     }
 
     public Patient savePatient(Patient patient){

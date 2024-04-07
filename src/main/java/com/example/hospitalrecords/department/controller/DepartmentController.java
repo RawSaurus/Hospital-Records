@@ -19,7 +19,10 @@ public class DepartmentController {
     public String welcome(){
         return "Welcome to departments";
     }
-
+    @GetMapping("/{id}")
+    public Department getDepartment(@PathVariable Long id){
+        return departmentService.findById(id);
+    }
     @PostMapping
     public Department postDepartment(@RequestBody Department department){
         return departmentService.saveDepartment(department);

@@ -30,12 +30,12 @@ public class HospitalService {
 
     public Hospital updateHospital(Long id, Hospital hospital){
 
-        Hospital updateHospital = hospitalRepository.findById(id)
+        Hospital updatedHospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
 
-        updateHospital.setName(hospital.getName());
+        updatedHospital.setName(hospital.getName());
 
-        return hospitalRepository.save(hospital);
+        return hospitalRepository.save(updatedHospital);
     }
 
     public String deleteHospital(Long id){

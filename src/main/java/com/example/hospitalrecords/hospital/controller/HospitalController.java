@@ -18,14 +18,19 @@ public class HospitalController {
         this.hospitalService = hospitalService;
     }
 
-    @GetMapping()
+    @GetMapping("/welcome")
     public String welcome(){
         return "Welcome in da Hospital";
     }
 
-    @GetMapping()
-    public String getHospital(@PathVariable Long id){
+    @GetMapping("/description/{id}")
+    public String getHospitalDescription(@PathVariable Long id){
         return hospitalService.findById(id).toString();
+    }
+
+    @GetMapping("/{id}")
+    public Hospital getHospital(@PathVariable Long id){
+        return hospitalService.findById(id);
     }
 
     @GetMapping()
@@ -44,4 +49,5 @@ public class HospitalController {
     public String deleteHospital2(@PathVariable Long id){
         return hospitalService.deleteHospital(id);
     }
+
 }

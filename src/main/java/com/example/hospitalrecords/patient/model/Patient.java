@@ -1,5 +1,6 @@
 package com.example.hospitalrecords.patient.model;
 
+import com.example.hospitalrecords.anamnesis.model.Anamnesis;
 import com.example.hospitalrecords.doctor.model.Doctor;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,8 @@ import java.util.Set;
 public class Patient {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long patientId;
     private String firstName;
     private String lastName;
     private int age;
@@ -29,9 +30,12 @@ public class Patient {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "Diagnosis",
-            joinColumns = {@JoinColumn(name = "id")},
+            joinColumns = {@JoinColumn(name = "patientId")},
             inverseJoinColumns = {@JoinColumn(name = "doctorId")}
     )
     private Set<Doctor> doctors = new HashSet<>();
+    @OneToOne
+    @JoinColumn(name = "anamnesisId")
+    private Anamnesis anamnesis;
 
 }

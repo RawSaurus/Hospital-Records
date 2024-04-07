@@ -1,2 +1,4 @@
-package com.example.hospitalrecords.treatment.model;public enum TreatmentType {
+package com.example.hospitalrecords.treatment.model;
+
+public enum TreatmentType {
 }

@@ -23,7 +23,7 @@ public class Doctor {
     /**Needed in Entity class, identifies field as Primary Key*/
     @Id
     /**Used with primary key to auto-generate values, generation type can be specified, PK ought to be non-primitive type*/
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long doctorId;
     /**Create fields, which JPA will transfer as columns into table, can add @Column to add specs as 'name', 'unique', 'nonnull', etc*/
     private String name;

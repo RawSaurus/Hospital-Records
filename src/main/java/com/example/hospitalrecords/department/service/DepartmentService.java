@@ -18,6 +18,11 @@ public class DepartmentService {
         return departmentRepository.save(department);
     }
 
+    public Department findById(Long id){
+        return departmentRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Hospital Not Found"));
+    }
+
     public Department updateDepartmentById(Long id, Department department){
 
         Department updatedDepartment = departmentRepository.findById(id).
