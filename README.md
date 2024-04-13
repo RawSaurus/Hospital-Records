@@ -8,3 +8,4 @@ Versions:
 * 0.0.2 - base functionality for controllers, small improvements
 * 0.0.3 - more modular structural refactor 
 * 0.0.4 - added role based access system
+* 0.0.5 - integration of spring security and mapstruct

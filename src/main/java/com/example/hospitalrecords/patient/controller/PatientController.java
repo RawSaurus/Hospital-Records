@@ -3,6 +3,7 @@ package com.example.hospitalrecords.patient.controller;
 import com.example.hospitalrecords.patient.model.Patient;
 import com.example.hospitalrecords.patient.service.PatientService;
 import com.example.hospitalrecords.patient.service.PatientService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

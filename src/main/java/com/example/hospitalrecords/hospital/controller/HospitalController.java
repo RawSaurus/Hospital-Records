@@ -1,5 +1,7 @@
 package com.example.hospitalrecords.hospital.controller;
 
+import com.example.hospitalrecords.hospital.dto.HospitalContactsDto;
+import com.example.hospitalrecords.hospital.model.HospitalInfo;
 import com.example.hospitalrecords.hospital.service.HospitalService;
 import com.example.hospitalrecords.department.model.Department;
 import com.example.hospitalrecords.hospital.model.Hospital;
@@ -31,6 +33,16 @@ public class HospitalController {
     @GetMapping("/{id}")
     public Hospital getHospital(@PathVariable Long id){
         return hospitalService.findById(id);
+    }
+
+    @GetMapping("/{id}/hospital-info")
+    public HospitalInfo getHospitalInfo(@PathVariable Long id){
+        return hospitalService.findById(id).getHospitalInfo();
+    }
+
+    @GetMapping("/{id}/hospital-contacts")
+    public HospitalContactsDto getContacts(@PathVariable Long id){
+        return hospitalService.findContactsByHospitalId(id);
     }
 
     @GetMapping()

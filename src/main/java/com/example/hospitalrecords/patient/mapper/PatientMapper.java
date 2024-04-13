@@ -32,4 +32,6 @@ public class PatientMapper {
                 patient.getFirstName(),
                 patient.getLastName());
     }
+
+    //mapstruct, JMapper
 }

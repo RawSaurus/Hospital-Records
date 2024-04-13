@@ -27,6 +27,7 @@ public class Patient {
     private String email;
     private double height;
     private double weight;
+    private double BMI;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "Diagnosis",

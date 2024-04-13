@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 public class Hospital {
 
@@ -23,11 +25,11 @@ public class Hospital {
     @OneToMany(mappedBy = "hospital")
     @JsonManagedReference
     private List<Department> departments;
+    @OneToOne
+    @JoinColumn(name = "hospitalInfoId")
+    private HospitalInfo hospitalInfo;
 
-    @Override
-    public String toString(){
-        return "This is hospital: " + getName();
-    }
+
 
     /**\/hospital
      * Logo, motto, name, address, contact(phone, fax, email, socials)
