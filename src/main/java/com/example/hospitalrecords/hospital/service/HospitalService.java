@@ -3,11 +3,14 @@ package com.example.hospitalrecords.hospital.service;
 import com.example.hospitalrecords.hospital.dto.HospitalContactsDto;
 import com.example.hospitalrecords.hospital.mapper.HospitalMapper;
 import com.example.hospitalrecords.hospital.model.Hospital;
+import com.example.hospitalrecords.hospital.model.HospitalInfo;
 import com.example.hospitalrecords.hospital.repository.HospitalInfoRepository;
 import com.example.hospitalrecords.hospital.repository.HospitalRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class HospitalService {
@@ -29,6 +32,16 @@ public class HospitalService {
 
     public Hospital saveHospital(Hospital hospital){
         return hospitalRepository.save(hospital);
+    }
+
+    public HospitalInfo postHospitalInfo(String name, HospitalInfo hospitalInfo) {
+        Hospital hospital = hospitalRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Hospital not found"));
+        hospitalInfo.setHospital(hospital);
+        hospitalInfoRepository.save(hospitalInfo);
+        hospital.setHospitalInfo(hospitalInfo);
+        hospitalRepository.save(hospital);
+        return hospitalInfo;
     }
 
     public List<Hospital> findAll(){
@@ -59,5 +72,22 @@ public class HospitalService {
         hospitalRepository.delete(deleteHospital);
 
         return "Hospital deleted successfully";
+    }
+
+    public String deleteHospitalByName(String name){
+
+        Hospital deleteHospital = hospitalRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
+
+        hospitalRepository.delete(deleteHospital);
+
+        return "Hospital deleted successfully";
+    }
+
+    public String deleteHospitalInfo(String name){
+        Hospital hospital = hospitalRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Hospital not found"));//TODO implement exception handling module
+        hospitalInfoRepository.delete(hospital.getHospitalInfo());
+        return "Info deleted successfully";
     }
 }

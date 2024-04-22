@@ -3,13 +3,15 @@ package com.example.hospitalrecords.doctor.controller;
 import com.example.hospitalrecords.doctor.model.Doctor;
 import com.example.hospitalrecords.doctor.repository.DoctorRepository;
 import com.example.hospitalrecords.doctor.service.DoctorService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**Controller used to declare endpoints
  * @RequestMapping specifies path for all methods
  * endpoints can have same path if http methods are different*/
 @RestController
-@RequestMapping("/doctors")
+@RequestMapping("/admin/doctors")
+@PreAuthorize("hasRole('ADMIN')")
 public class DoctorController {
 
     private final DoctorService doctorService;

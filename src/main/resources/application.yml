@@ -8,11 +8,20 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-  application: Hospital Records
+application:
+  name: Hospital Records
+  security:
+    jwt:
+      secret-key: ${SECRET_KEY}
+      expiration: 900000
+      refresh-token:
+        expiration: 7776000000
+
+

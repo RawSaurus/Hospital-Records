@@ -5,13 +5,20 @@ import com.example.hospitalrecords.hospital.model.HospitalInfo;
 import com.example.hospitalrecords.hospital.service.HospitalService;
 import com.example.hospitalrecords.department.model.Department;
 import com.example.hospitalrecords.hospital.model.Hospital;
+import com.example.hospitalrecords.role.model.RoleType;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/hospitals")
+@RequestMapping("/admin/hospitals")
+@PreAuthorize("hasRole('ADMIN')")
 public class HospitalController {
 
     private final HospitalService hospitalService;
@@ -21,13 +28,13 @@ public class HospitalController {
     }
 
     @GetMapping("/welcome")
-    public String welcome(){
-        return "Welcome in da Hospital";
+    public ResponseEntity<String> welcome(){
+        return ResponseEntity.ok("hello");
     }
 
     @GetMapping("/description/{id}")
-    public String getHospitalDescription(@PathVariable Long id){
-        return hospitalService.findById(id).toString();
+    public ResponseEntity<String> getHospitalDescription(@PathVariable Long id){
+        return ResponseEntity.ok(hospitalService.findById(id).toString());
     }
 
     @GetMapping("/{id}")
@@ -35,7 +42,7 @@ public class HospitalController {
         return hospitalService.findById(id);
     }
 
-    @GetMapping("/{id}/hospital-info")
+   @GetMapping("/{id}/hospital-info")
     public HospitalInfo getHospitalInfo(@PathVariable Long id){
         return hospitalService.findById(id).getHospitalInfo();
     }
@@ -49,17 +56,4 @@ public class HospitalController {
     public List<Hospital> findAllHospitals(){
         return hospitalService.findAll();
     }
-    @PostMapping()
-    public Hospital postHospital(@RequestBody Hospital hospital){
-        return hospitalService.saveHospital(hospital);
-    }
-    @PutMapping("/{id}")
-    public Hospital updateHospital(@PathVariable Long id, @RequestBody Hospital hospital){
-       return hospitalService.updateHospital(id, hospital);
-    }
-    @DeleteMapping("/{id}")
-    public String deleteHospital2(@PathVariable Long id){
-        return hospitalService.deleteHospital(id);
-    }
-
 }

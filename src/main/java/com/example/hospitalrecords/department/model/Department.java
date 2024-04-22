@@ -2,6 +2,7 @@ package com.example.hospitalrecords.department.model;
 
 import com.example.hospitalrecords.hospital.model.Hospital;
 import com.example.hospitalrecords.doctor.model.Doctor;
+import com.example.hospitalrecords.patient.model.Patient;
 import com.example.hospitalrecords.resource.model.ImageData;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.annotation.Nonnull;
@@ -31,7 +32,6 @@ public class Department {
     private List<ImageData> images;
     @ManyToOne
     @JoinColumn(name = "hospitalId")
-    @JsonBackReference
     private Hospital hospital;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -44,6 +44,8 @@ public class Department {
     @JoinColumn(name = "departmentGroupId")
     @JsonBackReference
     private DepartmentGroup departmentGroup;
+    @OneToMany
+    private List<Patient> patients;
 
 
 

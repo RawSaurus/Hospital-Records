@@ -21,12 +21,13 @@ public class Hospital {
     @Id
     @GeneratedValue
     private Long hospitalId;
+    @Column(unique = true)
     private String name;
     @OneToMany(mappedBy = "hospital")
-    @JsonManagedReference
     private List<Department> departments;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hospitalInfoId")
+    @JsonManagedReference
     private HospitalInfo hospitalInfo;
 
 
