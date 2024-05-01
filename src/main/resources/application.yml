@@ -1,8 +1,8 @@
 spring:
   config:
-    import: env.properties
+    import: password.properties
   datasource:
-    url: jdbc:postgresql://localhost:5432/hospital
+    url: jdbc:postgresql://localhost:5432/hospitaldata
     username: postgres
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
