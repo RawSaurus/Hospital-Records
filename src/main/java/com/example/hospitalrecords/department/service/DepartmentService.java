@@ -7,11 +7,16 @@ import com.example.hospitalrecords.department.model.DepartmentGroup;
 import com.example.hospitalrecords.department.repository.DepartmentGroupRepository;
 import com.example.hospitalrecords.department.repository.DepartmentRepository;
 import com.example.hospitalrecords.hospital.model.Hospital;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -61,12 +66,42 @@ public class DepartmentService {
         return departmentRepository.save(updatedDepartment);
     }
 
+    public DepartmentGroup addDepartmentToGroup(Department department, DepartmentGroup departmentGroup){
+        DepartmentGroup updateGroup = departmentGroupRepository.findById(departmentGroup.getDepartmentGroupId())
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+
+        if(!updateGroup.getDepartments().contains(department)){
+            updateGroup.getDepartments().add(department);
+            departmentGroupRepository.save(updateGroup);
+        }else
+            return null;
+
+        return updateGroup;
+    }
+
+    public void removeDepartmentFromGroup(Department department, DepartmentGroup departmentGroup){
+        DepartmentGroup updateGroup = departmentGroupRepository.findById(departmentGroup.getDepartmentGroupId())
+                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
+
+        updateGroup.getDepartments().remove(department);
+    }
+
     public String deleteDepartmentById(Long id){
 
         Department deletedDepartment= departmentRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Department Not Found"));
+                .orElseThrow(()-> new EntityNotFoundException("Department Not Found"));
 
         departmentRepository.delete(deletedDepartment);
+        return "Department deleted successfully";
+    }
+
+    public String deleteDepartment(Department department){
+        departmentRepository.delete(department);
+        return "Department deleted successfully";
+    }
+
+    public String deleteDepartmentGroup(DepartmentGroup departmentGroup){
+        departmentGroupRepository.delete(departmentGroup);
         return "Department deleted successfully";
     }
 }
