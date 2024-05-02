@@ -21,9 +21,9 @@ public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;//TODO use stronger secret key
     @Value("${application.security.jwt.expiration}")
-    private long jwtExpiration;//TODO set to 15 mins
+    private long jwtExpiration;
     @Value("${application.security.jwt.refresh-token.expiration}")
-    private long refreshExpiration;//TODO set to 3 months
+    private long refreshExpiration;
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);

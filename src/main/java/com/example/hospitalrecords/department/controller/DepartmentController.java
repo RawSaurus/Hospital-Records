@@ -65,10 +65,10 @@ public class DepartmentController {
         return departmentService.updateDepartmentById(id, department);
     }
 
-    @PutMapping("add-department-to-group")
+    @PutMapping("add-department-to-group/{id}")//TODO not working
     @PreAuthorize("hasAuthority('admin:update')")
-    public DepartmentGroup addDepartmentToGroup(@RequestBody Department department, @RequestBody DepartmentGroup departmentGroup){
-        return departmentService.addDepartmentToGroup(department, departmentGroup);
+    public DepartmentGroup addDepartmentToGroup(@PathVariable Long id, @RequestBody Department department){
+        return departmentService.addDepartmentToGroup(id, department);
     }
 
     @PutMapping("remove-department-to-group")

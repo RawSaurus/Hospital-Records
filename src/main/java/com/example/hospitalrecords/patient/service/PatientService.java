@@ -5,6 +5,8 @@ import com.example.hospitalrecords.patient.model.Patient;
 import com.example.hospitalrecords.patient.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PatientService {
 
@@ -14,6 +16,14 @@ public class PatientService {
     public PatientService(PatientRepository patientRepository, PatientMapper patientMapper){
         this.patientRepository = patientRepository;
         this.patientMapper = patientMapper;
+    }
+
+    public Patient getPatient(String name){
+        return patientRepository.findByLastnameOrFirstname(name);
+    }
+
+    public List<Patient> getAllPatients(){
+       return patientRepository.findAll();
     }
 
     public Patient savePatient(Patient patient){
