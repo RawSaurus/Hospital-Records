@@ -38,7 +38,7 @@ public class SecurityConfiguration {
     private final LogoutHandler logoutHandler;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{ //TODO delete request matchers from the filterchain and implement them on class and method level
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http
                 .csrf(AbstractHttpConfigurer::disable)

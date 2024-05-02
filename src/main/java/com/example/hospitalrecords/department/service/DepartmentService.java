@@ -46,7 +46,7 @@ public class DepartmentService {
 
     public Department findById(Long id){
         return departmentRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Hospital Not Found"));
+                .orElseThrow(()-> new EntityNotFoundException("Hospital Not Found"));
     }
 
 
@@ -66,9 +66,9 @@ public class DepartmentService {
         return departmentRepository.save(updatedDepartment);
     }
 
-    public DepartmentGroup addDepartmentToGroup(Department department, DepartmentGroup departmentGroup){
-        DepartmentGroup updateGroup = departmentGroupRepository.findById(departmentGroup.getDepartmentGroupId())
-                .orElseThrow(() -> new RuntimeException("Group not found"));
+    public DepartmentGroup addDepartmentToGroup(Long id, Department department){
+        DepartmentGroup updateGroup = departmentGroupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
 
         if(!updateGroup.getDepartments().contains(department)){
             updateGroup.getDepartments().add(department);
