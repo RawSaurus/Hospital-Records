@@ -1,6 +1,6 @@
 spring:
   config:
-    import: password.properties
+    import: env.properties
   datasource:
     url: jdbc:postgresql://localhost:5432/hospitaldata
     username: postgres
