@@ -36,7 +36,7 @@ public class AdminHospitalController {
     public HospitalInfo updateHospitalInfo(@PathVariable String name, @RequestBody HospitalInfo hospitalInfo) {
         return hospitalService.postHospitalInfo(name, hospitalInfo);
     }
-    @DeleteMapping("/{name}")
+    @DeleteMapping("/info/{name}")
     @PreAuthorize("hasAuthority('admin:delete')")
     public String deleteHospitalInfo(@PathVariable String name){
         return hospitalService.deleteHospitalInfo(name);

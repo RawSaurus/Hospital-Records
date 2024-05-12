@@ -10,3 +10,4 @@ Versions:
 * 0.0.4 - added role based access system
 * 0.0.5 - integration of spring security and mapstruct
 * 0.0.6 - implementation of security - login, authorization, jwt token
+* 0.0.7 - added functionality, implementation of swagger ui

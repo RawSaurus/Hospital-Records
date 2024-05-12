@@ -25,4 +25,10 @@ public class DepartmentGroup {
     @OneToMany(mappedBy = "departmentGroup")
     @JsonManagedReference
     private List<Department> departments;
+
+
+    /**TODO
+     *
+     *
+     */
 }

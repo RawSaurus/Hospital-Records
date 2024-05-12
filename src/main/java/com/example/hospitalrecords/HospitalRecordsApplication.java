@@ -18,14 +18,7 @@ public class HospitalRecordsApplication {
 	@Bean
 	public CommandLineRunner commandLineRunner(AuthenticationService service){
 		return args -> {
-			var admin = RegisterRequest.builder()
-					.firstname("admin")
-					.lastname("admin")
-					.email("admin@mail.com")
-					.password("admin")
-					.roleType(RoleType.ADMIN)
-					.build();
-			System.out.println("Admin token: " + service.register(admin).getAccessToken());
+
 
 			var receptionist = RegisterRequest.builder()
 					.firstname("receptionist")
@@ -35,6 +28,15 @@ public class HospitalRecordsApplication {
 					.roleType(RoleType.RECEPTIONIST)
 					.build();
 			System.out.println("Receptionist token: " + service.register(receptionist).getAccessToken());
+
+			var admin = RegisterRequest.builder()
+					.firstname("admin")
+					.lastname("admin")
+					.email("admin@mail.com")
+					.password("admin")
+					.roleType(RoleType.ADMIN)
+					.build();
+			System.out.println("Admin token: " + service.register(admin).getAccessToken());
 		};
 	}
 

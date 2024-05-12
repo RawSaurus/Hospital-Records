@@ -1,8 +1,11 @@
 package com.example.hospitalrecords.patient.controller;
 
+import com.example.hospitalrecords.patient.dto.PatientRequestDto;
+import com.example.hospitalrecords.patient.dto.PatientResponseDto;
 import com.example.hospitalrecords.patient.model.Patient;
 import com.example.hospitalrecords.patient.service.PatientService;
-import com.example.hospitalrecords.patient.service.PatientService;
+import com.example.hospitalrecords.role.model.RoleType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +23,7 @@ public class PatientController {
 
     @GetMapping("/{name}")
     @PreAuthorize("hasAuthority('admin:read')")
-    public Patient getPatient(@PathVariable String name){
+    public PatientRequestDto getPatient(@PathVariable String name){
         return patientService.getPatient(name);
     }
 
@@ -32,19 +35,19 @@ public class PatientController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('admin:create')")
-    public Patient postPatient(@RequestBody Patient patient){
-        return patientService.savePatient(patient);
+    public void postPatient(@RequestBody PatientRequestDto patient){
+        patientService.savePatient(patient);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
-    public Patient updatePatientById(@PathVariable Long id, @RequestBody Patient patient){
+    public PatientRequestDto updatePatientById(@PathVariable Long id, @RequestBody PatientRequestDto patient){
         return patientService.updatePatientById(id, patient);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
-    public String deletePatientById(@PathVariable Long id){
-        return patientService.deletePatientById(id);
+    public void deletePatientById(@PathVariable Long id){
+        patientService.deletePatientById(id);
     }
 }

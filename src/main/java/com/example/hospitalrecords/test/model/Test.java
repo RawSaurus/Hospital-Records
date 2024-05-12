@@ -1,9 +1,8 @@
 package com.example.hospitalrecords.test.model;
 
 import com.example.hospitalrecords.doctor.model.Doctor;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.example.hospitalrecords.patient.model.Patient;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +23,13 @@ public class Test {
     private double price;
     private int durationDays;
     private Date date;
+    @ManyToOne
+    @JoinColumn(name = "patientId")
+    private Patient patient;
+
+    /**TODO
+     *  connect with diagnosis, patient
+     */
 
 
 }

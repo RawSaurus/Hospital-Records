@@ -4,15 +4,16 @@ import com.example.hospitalrecords.patient.dto.PatientRequestDto;
 import com.example.hospitalrecords.patient.dto.PatientResponseDto;
 import com.example.hospitalrecords.patient.model.Patient;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface PatientMapper {
 
-    PatientRequestDto toRequestDto(Patient patient);
+//    PatientRequestDto toRequestDto(Patient patient);
+//
+//    Patient toEntityFromRequest(PatientRequestDto patientRequestDto);
+//
+//    PatientResponseDto toResponseDto(Patient patient);
 
-    Patient toEntityFromRequest(PatientRequestDto patientRequestDto);
 
-    PatientResponseDto toResponseDto(Patient patient);
-
-    Patient toEntityFromResponse(PatientResponseDto patientResponseDto);
 }

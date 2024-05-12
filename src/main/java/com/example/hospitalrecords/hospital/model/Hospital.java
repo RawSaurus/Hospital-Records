@@ -32,14 +32,5 @@ public class Hospital {
 
 
 
-    /**\/hospital
-     * Logo, motto, name, address, contact(phone, fax, email, socials)
-     * pictures(more details url)
-     * List<Services>
-     * News, List of last ten announcements
-     * Google map API
-     *
-     * /hospital/history
-     * name, text, pictures, source*/
 
 }

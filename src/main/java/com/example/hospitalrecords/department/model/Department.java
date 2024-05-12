@@ -48,7 +48,4 @@ public class Department {
     private List<Patient> patients;
 
 
-
-
-
 }

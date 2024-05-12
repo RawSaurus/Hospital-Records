@@ -27,7 +27,8 @@ public enum RoleType { //TODO create database implementation for roles and permi
                     RECEPTIONIST_READ,
                     RECEPTIONIST_CREATE,
                     RECEPTIONIST_UPDATE,
-                    RECEPTIONIST_DELETE
+                    RECEPTIONIST_DELETE,
+                    PATIENT_READ
             )
     ),
     DOCTOR(
@@ -47,7 +48,11 @@ public enum RoleType { //TODO create database implementation for roles and permi
                     RECEPTIONIST_DELETE
             )
     ),
-    PATIENT(Collections.emptySet());
+    PATIENT(
+            Set.of(
+                    PATIENT_READ
+            )
+    );
 
 
     private final Set<Permission> permissions;

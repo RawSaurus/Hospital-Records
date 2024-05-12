@@ -22,4 +22,10 @@ public class ImageData {
     private String name;
     @Lob
     private byte[] imageData;
+
+
+    /**TODO
+     *input functionality for saving and loading
+     *
+     */
 }

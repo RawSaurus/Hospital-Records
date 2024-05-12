@@ -6,6 +6,7 @@ import com.example.hospitalrecords.hospital.model.Hospital;
 import com.example.hospitalrecords.hospital.model.HospitalInfo;
 import com.example.hospitalrecords.hospital.repository.HospitalInfoRepository;
 import com.example.hospitalrecords.hospital.repository.HospitalRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class HospitalService {
 
     public Hospital findById(Long id){
        return hospitalRepository.findById(id)
-               .orElseThrow(()-> new RuntimeException("Hospital Not Found"));
+               .orElseThrow(()-> new EntityNotFoundException("Hospital Not Found"));
     }
 
     public Hospital saveHospital(Hospital hospital){
@@ -36,7 +37,7 @@ public class HospitalService {
 
     public HospitalInfo postHospitalInfo(String name, HospitalInfo hospitalInfo) {
         Hospital hospital = hospitalRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Hospital not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Hospital not found"));
         hospitalInfo.setHospital(hospital);
         hospitalInfoRepository.save(hospitalInfo);
         hospital.setHospitalInfo(hospitalInfo);
@@ -50,14 +51,14 @@ public class HospitalService {
 
     public HospitalContactsDto findContactsByHospitalId(Long id){
         Hospital hospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
+                .orElseThrow(() -> new EntityNotFoundException("Hospital Not Found"));
         return hospitalMapper.toHospitalContactsDto(hospital.getHospitalInfo());
     }
 
     public Hospital updateHospital(Long id, Hospital hospital){
 
         Hospital updatedHospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
+                .orElseThrow(() -> new EntityNotFoundException("Hospital Not Found"));
 
         updatedHospital.setName(hospital.getName());
 
@@ -67,7 +68,7 @@ public class HospitalService {
     public String deleteHospital(Long id){
 
         Hospital deleteHospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
+                .orElseThrow(() -> new EntityNotFoundException("Hospital Not Found"));
 
         hospitalRepository.delete(deleteHospital);
 
@@ -77,7 +78,7 @@ public class HospitalService {
     public String deleteHospitalByName(String name){
 
         Hospital deleteHospital = hospitalRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Hospital Not Found"));
+                .orElseThrow(() -> new EntityNotFoundException("Hospital Not Found"));
 
         hospitalRepository.delete(deleteHospital);
 
@@ -86,7 +87,7 @@ public class HospitalService {
 
     public String deleteHospitalInfo(String name){
         Hospital hospital = hospitalRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Hospital not found"));//TODO implement exception handling module
+                .orElseThrow(() -> new EntityNotFoundException("Hospital not found"));
         hospitalInfoRepository.delete(hospital.getHospitalInfo());
         return "Info deleted successfully";
     }

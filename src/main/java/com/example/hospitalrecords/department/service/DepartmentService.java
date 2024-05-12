@@ -53,14 +53,14 @@ public class DepartmentService {
     public List<Department> getAllDepartmentsFromGroup(Long id){
 
         return departmentGroupRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Group Not Found"))
+                .orElseThrow(() -> new EntityNotFoundException("Group Not Found"))
                 .getDepartments();
     }
 
     public Department updateDepartmentById(Long id, Department department){
 
         Department updatedDepartment = departmentRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Department Not Found"));
+                orElseThrow(() -> new EntityNotFoundException("Department Not Found"));
 
         updatedDepartment.setName(department.getName());
         return departmentRepository.save(updatedDepartment);

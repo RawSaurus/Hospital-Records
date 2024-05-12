@@ -1,53 +1,62 @@
 package com.example.hospitalrecords.doctor.service;
 
+import com.example.hospitalrecords.department.model.Department;
+import com.example.hospitalrecords.department.repository.DepartmentRepository;
 import com.example.hospitalrecords.doctor.model.Doctor;
 import com.example.hospitalrecords.doctor.repository.DoctorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-/**
- * Service is injected with dependency to repository
- * Service is injected into controller as dependency
- * Is used to create logic, fetching, manipulating data between endpoints and database
- * */
+import java.util.List;
+
+@RequiredArgsConstructor
 @Service
 public class DoctorService {
 
-    /**Dependency injection*/
     private final DoctorRepository doctorRepository;
+    private final DepartmentRepository departmentRepository;
 
-    /**RequiredArgsConstructor*/
-    public DoctorService(DoctorRepository doctorRepository){
-        this.doctorRepository = doctorRepository;
+    public Doctor getDoctor(Long id){
+        return doctorRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Doctor not found"));
     }
 
-    /**Creates new Doctor
-     * 'save' method returns entity specified in repository
-     * */
+    public List<Doctor> getAllDoctors(){
+        return doctorRepository.findAll();
+    }
+
+    public List<Doctor> getDoctorsFromDepartment(Long id){
+      Department department = departmentRepository.findById(id)
+              .orElseThrow(() -> new EntityNotFoundException("Department not found"));
+
+      return department.getDoctors()
+              .stream()
+              .toList();
+    }
+
     public Doctor saveDoctor(Doctor doctor){
         return doctorRepository.save(doctor);
     }
 
-    /**Updating existing doctor, changes attributes, ID stays same*/
     public Doctor updateDoctorById(Long id, Doctor doctor){
 
-        /**First find doctor by id and save to variable, if id doesn't exit throw exception(should create custom ones later)*/
         Doctor updatedDoctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor Not Found"));
+                .orElseThrow(() -> new EntityNotFoundException("Doctor Not Found"));
 
-        /**Update fields via setters of existing doctor and getters of new doctor data from method parameters
-         * */
-        updatedDoctor.setName(doctor.getName());
-        updatedDoctor.setSurname(doctor.getSurname());
+        updatedDoctor.setFirstname(doctor.getFirstname());
+        updatedDoctor.setLastname(doctor.getLastname());
         updatedDoctor.setTitle(doctor.getTitle());
+        updatedDoctor.setEmail(doctor.getEmail());
 
-        return doctorRepository.save(updatedDoctor);
+        return doctorRepository.save(updatedDoctor);//TODO mapper
     }
 
     public String deleteDoctorById(Long id){
 
         Doctor deletedDoctor = doctorRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Doctor Not Found"));
+                .orElseThrow(()-> new EntityNotFoundException("Doctor Not Found"));
         return "Doctor deleted successfully";
     }
 

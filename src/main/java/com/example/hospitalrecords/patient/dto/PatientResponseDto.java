@@ -1,5 +1,13 @@
 package com.example.hospitalrecords.patient.dto;
 
-public record PatientResponseDto(String firstName,
-                                 String lastName) {
+import com.example.hospitalrecords.patient.model.Sex;
+
+public record PatientResponseDto(String firstname,
+                                 String lastname,
+                                 int age,
+                                 String email,
+                                 Sex sex,
+                                 double height,
+                                 double weight,
+                                 String contact) {
 }

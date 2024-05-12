@@ -6,12 +6,10 @@ import com.example.hospitalrecords.doctor.service.DoctorService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-/**Controller used to declare endpoints
- * @RequestMapping specifies path for all methods
- * endpoints can have same path if http methods are different*/
+import java.util.List;
+
 @RestController
-@RequestMapping("/admin/doctors")
-@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/doctors")
 public class DoctorController {
 
     private final DoctorService doctorService;
@@ -20,12 +18,23 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
+    @GetMapping("/{id}")
+    public Doctor getDoctor(@PathVariable Long id){
+        return doctorService.getDoctor(id);
+    }
+
     @GetMapping
-    public String welcome(){
-        return "This is listing of our doctors";
+    public List<Doctor> getAllDoctors(){
+        return doctorService.getAllDoctors();
+    }
+
+    @GetMapping("/department/{id}")
+    public List<Doctor> getDoctorsFromDepartment(@PathVariable Long id){
+        return doctorService.getDoctorsFromDepartment(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('admin:create')")
     public Doctor postDoctor(@RequestBody Doctor doctor){
         return doctorService.saveDoctor(doctor);
     }

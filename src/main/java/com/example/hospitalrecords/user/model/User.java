@@ -21,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "_user")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
 
     @Id
@@ -36,9 +37,6 @@ public class User implements UserDetails {
     private RoleType roleType;
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
-    @OneToOne
-    @JoinColumn(name = "anamnesisId")
-    private Anamnesis anamnesis;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

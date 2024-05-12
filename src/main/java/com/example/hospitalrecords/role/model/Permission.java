@@ -18,7 +18,8 @@ public enum Permission {
     RECEPTIONIST_READ("receptionist:read"),
     RECEPTIONIST_CREATE("receptionist:create"),
     RECEPTIONIST_UPDATE("receptionist:update"),
-    RECEPTIONIST_DELETE("receptionist:delete");
+    RECEPTIONIST_DELETE("receptionist:delete"),
+    PATIENT_READ("patient:read");
 
     private final String permission;
 }
