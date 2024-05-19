@@ -7,10 +7,8 @@ import com.example.hospitalrecords.resource.model.ImageData;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +23,7 @@ public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deptId;
+    @NotEmpty
     private String name;
     @Lob
     private String description;

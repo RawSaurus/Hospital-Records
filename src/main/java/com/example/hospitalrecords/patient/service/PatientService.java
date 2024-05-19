@@ -7,6 +7,7 @@ import com.example.hospitalrecords.patient.mapper.PatientMapper2;
 import com.example.hospitalrecords.patient.model.Patient;
 import com.example.hospitalrecords.patient.repository.PatientRepository;
 import com.example.hospitalrecords.role.model.RoleType;
+import com.example.hospitalrecords.validation.ObjectsValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,53 +24,54 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper2 patientMapper;
+    private final ObjectsValidator validator;
 
 
     public PatientRequestDto getPatient(String name){
-        System.out.println(name);
         int blank = name.indexOf(" ");
-        System.out.println(blank);
         String firstname = name.substring(0, blank);
         String lastname = name.substring(blank + 1);
-        System.out.println(firstname);
-        System.out.println(lastname);
         Patient patient = patientRepository.findByLastnameOrFirstname(lastname, firstname);
         return patientMapper.toRequestDto(patient);
     }
 
-    public List<Patient> getAllPatients(){//TODO dto
-       return patientRepository.findAll();
+    public List<PatientRequestDto> getAllPatients(){
+        return patientRepository.findAll()
+                .stream()
+                .map(patientMapper::toRequestDto)
+                .collect(Collectors.toList());
     }
 
-    public void savePatient(PatientRequestDto patient){
+    public String savePatient(PatientRequestDto patient){
         Patient savePatient = patientMapper.toEntityFromRequest(patient);
         savePatient.setRoleType(RoleType.PATIENT);
         patientRepository.save(savePatient);
+        return savePatient.toString();
     }
 
-    public PatientRequestDto updatePatientById(Long id, PatientRequestDto patient){//TODO not working correctly
+    public ResponseEntity updatePatientById(Long id, PatientRequestDto patient){
 
         Patient updatedPatient = patientRepository.findById(id)
                 .orElseThrow(()->new EntityNotFoundException("Patient Not Found"));
 
-        updatedPatient = patientMapper.toEntityFromRequest(patient);
-//        updatedPatient.setFirstname(patient.firstname());
-//        updatedPatient.setLastname(patient.lastname());
-//        updatedPatient.setAge(patient.age());
-//        updatedPatient.setSex(patient.sex());
-//        updatedPatient.setEmail(patient.email());
-//        updatedPatient.setWeight(patient.weight());
-//        updatedPatient.setHeight(patient.height());
+        updatedPatient.setFirstname(patient.firstname());
+        updatedPatient.setLastname(patient.lastname());
+        updatedPatient.setAge(patient.age());
+        updatedPatient.setSex(patient.sex());
+        updatedPatient.setEmail(patient.email());
+        updatedPatient.setWeight(patient.weight());
+        updatedPatient.setHeight(patient.height());
 
         patientRepository.save(updatedPatient);
 
-        return patientMapper.toRequestDto(updatedPatient);
+        return ResponseEntity.ok("patient updated");
     }
 
-    public void deletePatientById(Long id){
+    public ResponseEntity deletePatientById(Long id){
         Patient deletedPatient = patientRepository.findById(id)
                 .orElseThrow(()->new EntityNotFoundException("Patient Not Found"));
 
         patientRepository.delete(deletedPatient);
+        return ResponseEntity.ok("Patient deleted");
     }
 }

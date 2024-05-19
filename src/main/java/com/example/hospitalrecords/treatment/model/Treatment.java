@@ -1,6 +1,7 @@
 package com.example.hospitalrecords.treatment.model;
 
 import com.example.hospitalrecords.patient.model.Patient;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Treatment {
     @Column(updatable = false, name = "started_at")
     private Date startedAt;
     @ManyToOne
-    @JoinColumn(name = "patientId")
+    @JoinColumn(name = "userId")
+    @JsonBackReference
     private Patient patient;
 }

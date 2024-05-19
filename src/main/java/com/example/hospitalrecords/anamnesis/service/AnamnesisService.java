@@ -24,14 +24,14 @@ public class AnamnesisService {
        return patient.getAnamnesis();
     }
 
-    public Anamnesis postAnamnesis(Long id, Anamnesis anamnesis){
+    public Anamnesis postAnamnesis(Long id, Anamnesis anamnesis){//TODO dto
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
         anamnesis.setPatient(patient);
         anamnesisRepository.save(anamnesis);
         patient.setAnamnesis(anamnesis);
         patientRepository.save(patient);
-        return anamnesis;
+        return anamnesis;//todo Validation - one to one - duplicate key
     }
 
     public Anamnesis updateAnamnesis(Long id, Anamnesis anamnesis){

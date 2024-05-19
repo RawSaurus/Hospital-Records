@@ -1,9 +1,10 @@
 package com.example.hospitalrecords.test.model;
 
+import lombok.Getter;
+
+@Getter
 public enum TestType {
 
-    /*TODO blood, urine
-    /
-
-     */
+   BLOOD,
+   URINE
 }

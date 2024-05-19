@@ -2,9 +2,10 @@ package com.example.hospitalrecords.patient.mapper;
 
 import com.example.hospitalrecords.patient.dto.PatientRequestDto;
 import com.example.hospitalrecords.patient.model.Patient;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 public class PatientMapper2 {
 
     public PatientRequestDto toRequestDto(Patient patient){

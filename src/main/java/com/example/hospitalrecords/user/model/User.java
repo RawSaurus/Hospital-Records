@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Token> tokens;
 
     @Override

@@ -5,6 +5,7 @@ import com.example.hospitalrecords.department.model.Department;
 import com.example.hospitalrecords.department.model.DepartmentGroup;
 import com.example.hospitalrecords.department.repository.DepartmentRepository;
 import com.example.hospitalrecords.department.service.DepartmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
@@ -13,24 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.Phaser;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/departments")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
 
-    public DepartmentController(DepartmentService departmentService){
-       this.departmentService = departmentService;
-    }
-
-    @GetMapping
-    public String welcome(){
-        return "Welcome to departments";
-    }
-    @GetMapping("/{id}")
-    public Department getDepartment(@PathVariable Long id){
-        return departmentService.findById(id);
-    }
 
     @GetMapping("/department-info/{id}")
     public DepartmentInfoDto getDepartmentInfo(@PathVariable Long id){
@@ -49,7 +39,7 @@ public class DepartmentController {
     }
     @PostMapping
     @PreAuthorize("hasAuthority('admin:create')")
-    public Department postDepartment(@RequestBody Department department){
+    public String postDepartment(@RequestBody Department department){
         return departmentService.saveDepartment(department);
     }
 
@@ -65,7 +55,7 @@ public class DepartmentController {
         return departmentService.updateDepartmentById(id, department);
     }
 
-    @PutMapping("add-department-to-group/{id}")//TODO not working
+    @PutMapping("add-department-to-group/{id}")//TODO working only for dpt group
     @PreAuthorize("hasAuthority('admin:update')")
     public DepartmentGroup addDepartmentToGroup(@PathVariable Long id, @RequestBody Department department){
         return departmentService.addDepartmentToGroup(id, department);

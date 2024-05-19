@@ -6,13 +6,14 @@ import com.example.hospitalrecords.test.model.Test;
 import com.example.hospitalrecords.treatment.model.Treatment;
 import com.example.hospitalrecords.user.model.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,10 +41,17 @@ public class Patient extends User {
     @JsonBackReference
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private Anamnesis anamnesis;
-    @OneToMany
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JsonManagedReference
     private List<Test> tests;
-    @OneToMany
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JsonManagedReference
     private List<Treatment> treatments;
-
 
 }

@@ -41,6 +41,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(
@@ -54,7 +55,9 @@ public class SecurityConfiguration {
                                 "/configuration/ui",
                                 "/configuration/security",
                                 "/swagger-ui/**",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/view-departments/**",
+                                "/view-doctors/**"
                                 )
                         .permitAll()
 

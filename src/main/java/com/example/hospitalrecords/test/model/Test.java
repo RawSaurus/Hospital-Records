@@ -2,6 +2,7 @@ package com.example.hospitalrecords.test.model;
 
 import com.example.hospitalrecords.doctor.model.Doctor;
 import com.example.hospitalrecords.patient.model.Patient;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,17 +20,13 @@ public class Test {
     @GeneratedValue
     private Long testId;
     private String name;
+    @Column
+    @Enumerated(EnumType.STRING)
     private TestType testType;
-    private double price;
-    private int durationDays;
     private Date date;
     @ManyToOne
-    @JoinColumn(name = "patientId")
+    @JoinColumn(name = "userId")
+    @JsonBackReference
     private Patient patient;
-
-    /**TODO
-     *  connect with diagnosis, patient
-     */
-
 
 }

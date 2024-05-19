@@ -7,6 +7,7 @@ import com.example.hospitalrecords.department.model.DepartmentGroup;
 import com.example.hospitalrecords.department.repository.DepartmentGroupRepository;
 import com.example.hospitalrecords.department.repository.DepartmentRepository;
 import com.example.hospitalrecords.hospital.model.Hospital;
+import com.example.hospitalrecords.validation.ObjectsValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -25,9 +27,14 @@ public class DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final DepartmentGroupRepository departmentGroupRepository;
     private final DepartmentMapper departmentMapper;
+    private final ObjectsValidator<Department> validator;
 
-    public Department saveDepartment(Department department){
-        return departmentRepository.save(department);
+    public String saveDepartment(Department department){
+        Set<String> violations = validator.validate(department);
+        if(!violations.isEmpty()){
+            return String.join(" | ", violations);
+        }
+        return departmentRepository.save(department).toString();
     }
 
     public List<DepartmentGroup> getAllDepartmentGroups(){
@@ -37,20 +44,21 @@ public class DepartmentService {
     public DepartmentInfoDto getDepartmentInfo(Long id){
         return departmentRepository.findById(id)
                 .map(departmentMapper::toDeptInfoDto)
-                .orElseThrow(()-> new RuntimeException("Departmetn Not Found"));
+                .orElseThrow(()-> new EntityNotFoundException("Departmetn Not Found"));
     }
 
     public DepartmentGroup createDepartmentGroup(DepartmentGroup departmentGroup){
         return departmentGroupRepository.save(departmentGroup);
     }
 
-    public Department findById(Long id){
+    public DepartmentInfoDto findById(Long id){
         return departmentRepository.findById(id)
+                .map(departmentMapper::toDeptInfoDto)
                 .orElseThrow(()-> new EntityNotFoundException("Hospital Not Found"));
     }
 
 
-    public List<Department> getAllDepartmentsFromGroup(Long id){
+    public List<Department> getAllDepartmentsFromGroup(Long id){//TODO DTO
 
         return departmentGroupRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Group Not Found"))
@@ -66,7 +74,7 @@ public class DepartmentService {
         return departmentRepository.save(updatedDepartment);
     }
 
-    public DepartmentGroup addDepartmentToGroup(Long id, Department department){
+    public DepartmentGroup addDepartmentToGroup(Long id, Department department){//TODO not working
         DepartmentGroup updateGroup = departmentGroupRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found"));
 
@@ -79,7 +87,7 @@ public class DepartmentService {
         return updateGroup;
     }
 
-    public void removeDepartmentFromGroup(Department department, DepartmentGroup departmentGroup){
+    public void removeDepartmentFromGroup(Department department, DepartmentGroup departmentGroup){//TODO not working
         DepartmentGroup updateGroup = departmentGroupRepository.findById(departmentGroup.getDepartmentGroupId())
                 .orElseThrow(() -> new EntityNotFoundException("Group not found"));
 

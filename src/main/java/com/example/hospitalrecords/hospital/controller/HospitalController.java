@@ -21,6 +21,7 @@ import java.util.Optional;
 @PreAuthorize("hasRole('ADMIN')")
 public class HospitalController {
 
+    //todo landing page controller
     private final HospitalService hospitalService;
 
     public HospitalController(HospitalService hospitalService) {

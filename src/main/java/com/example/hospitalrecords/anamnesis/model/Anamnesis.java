@@ -32,7 +32,7 @@ public class Anamnesis {
     @OneToOne
     @JoinColumn(name = "patientId")
     @JsonManagedReference
-    @Cascade(value = CascadeType.DELETE_ORPHAN)
+    @Cascade(value = CascadeType.DELETE_ORPHAN)//TODO finish delete method
     private Patient patient;
 
 }

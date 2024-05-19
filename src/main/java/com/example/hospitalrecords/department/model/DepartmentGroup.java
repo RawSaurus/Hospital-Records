@@ -26,9 +26,4 @@ public class DepartmentGroup {
     @JsonManagedReference
     private List<Department> departments;
 
-
-    /**TODO
-     *
-     *
-     */
 }
