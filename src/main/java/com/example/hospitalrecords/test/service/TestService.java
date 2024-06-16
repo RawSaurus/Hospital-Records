@@ -27,8 +27,6 @@ public class TestService {
     private final PatientRepository patientRepository;
     private final TestMapper testMapper;
 
-//todo implement functionality
-
     public TestDto getTest(Long id, String testName){
       return   testMapper.toTestDto(patientRepository.findById(id)
               .orElseThrow(() -> new EntityNotFoundException("Patient not found"))
@@ -51,33 +49,46 @@ public class TestService {
 
     public TestDto postTest(Long id, TestDto testDto){
        Test test = testMapper.toEntity(testDto);
-       Patient patient = patientRepository.findById(id).get();
-       test.setPatient(patient);
-       List<Test> listOfTest = patient.getTests();
-       listOfTest.add(test);
-       patient.setTests(listOfTest);
-       patientRepository.save(patient);//TODO doesn't add tests to patient list
+       Patient patient = patientRepository.findById(id)
+               .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
 
-
-//       test.setPatient(patientRepository.findById(id)
-//               .orElseThrow(() -> new EntityNotFoundException("Patient not found")));
-//       testRepository.save(test);//TODO also save to patients tests list
+//       test.setPatient(patient);
+       patient.getTests().add(test);
+       patientRepository.save(patient);
 
        return testDto;
     }
 
-    public TestDto updateTest(Long id,String testName, TestDto testDto){
-//        Test updatedTest = testRepository.findByUserIdAndName(id,testName)
-//                .orElseThrow(() -> new EntityNotFoundException("Test not found"));
-//        updatedTest = testMapper.toEntity(testDto); //todo test and improve
-//        testRepository.save(updatedTest);
-//        return testMapper.toTestDto(updatedTest);
-        return null;
+    public ResponseEntity updateTest(Long id,Long testId, TestDto testDto){
+
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
+
+        for(int i = 0; i<patient.getTests().size(); i++){
+            if(patient.getTests().get(i).getTestId().equals(testId)){
+               testMapper.updateToEntity(testDto, patient.getTests().get(i));
+               patientRepository.save(patient);
+               break;
+            }
+        }
+
+
+        return ResponseEntity.ok("Test updated");
     }
 
 
-    public ResponseEntity deleteTest(Long id){
-        testRepository.deleteById(id);
+    public ResponseEntity deleteTest(Long id, Long testId){
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
+
+        for(int i = 0; i<patient.getTests().size(); i++){
+            if(patient.getTests().get(i).getTestId().equals(testId)) {
+                patient.getTests().remove(i);
+                patientRepository.save(patient);
+                testRepository.deleteById(testId);
+                break;
+            }
+        }
         return ResponseEntity.ok("Deleted successfully");
     }
 }

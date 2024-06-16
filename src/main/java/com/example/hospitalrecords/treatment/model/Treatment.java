@@ -26,8 +26,8 @@ public class Treatment {
     @CreationTimestamp
     @Column(updatable = false, name = "started_at")
     private Date startedAt;
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    @JsonBackReference
-    private Patient patient;
+//    @ManyToOne
+//    @JoinColumn(name = "userId")
+//    @JsonBackReference
+//    private Patient patient;
 }

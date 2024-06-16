@@ -23,7 +23,7 @@ public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deptId;
-    @NotEmpty
+    @NotEmpty(message = "you should provide a name")
     private String name;
     @Lob
     private String description;
@@ -38,9 +38,8 @@ public class Department {
             joinColumns = {@JoinColumn(name = "deptId")},
             inverseJoinColumns = {@JoinColumn(name = "doctorId")}
     )
-    private Set<Doctor> doctors = new HashSet<>();
+    private List<Doctor> doctors;
     @ManyToOne
-    @JoinColumn(name = "departmentGroupId")
     @JsonBackReference
     private DepartmentGroup departmentGroup;
     @OneToMany

@@ -34,16 +34,16 @@ public class TestController {
         return testService.postTest(id, testDto);
     }
 
-    @PutMapping("/{id}/{testName}")
+    @PutMapping("/{id}/{testId}")
     @PreAuthorize("hasAuthority('admin:update')")
-    public TestDto updateTest(@PathVariable Long id,@PathVariable String testName, @RequestBody TestDto testDto){
-        return testService.updateTest(id, testName, testDto);
+    public ResponseEntity updateTest(@PathVariable Long id,@PathVariable Long testId, @RequestBody TestDto testDto){
+        return testService.updateTest(id, testId, testDto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/{testId}")
     @PreAuthorize("hasAuthority('admin:delete')")
-    public ResponseEntity deleteTest(@PathVariable Long id){
-        return testService.deleteTest(id);
+    public ResponseEntity deleteTest(@PathVariable Long id, @PathVariable Long testId){
+        return testService.deleteTest(id, testId);
     }
 
 

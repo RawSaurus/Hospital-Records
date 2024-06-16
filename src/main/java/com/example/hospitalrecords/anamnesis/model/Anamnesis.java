@@ -9,9 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -26,13 +26,8 @@ public class Anamnesis {
     private String title;
     @Lob
     private String history;
-    private ArrayList<String> hospitalizations;
-    private ArrayList<String> treatments;
-    private ArrayList<String> diagnosis;
-    @OneToOne
-    @JoinColumn(name = "patientId")
-    @JsonManagedReference
-    @Cascade(value = CascadeType.DELETE_ORPHAN)//TODO finish delete method
-    private Patient patient;
+    private List<String> hospitalizations;
+    private List<String> treatments;
+    private List<String> diagnosis;
 
 }

@@ -31,15 +31,13 @@ public class Patient extends User {
     private double BMI;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "Diagnosis",
+            name = "Doctors_Patients",
             joinColumns = {@JoinColumn(name = "patientId")},
             inverseJoinColumns = {@JoinColumn(name = "doctorId")}
     )
     private Set<Doctor> doctors = new HashSet<>();
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "anamnesisId")
-    @JsonBackReference
-    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private Anamnesis anamnesis;
     @OneToMany(
             cascade = CascadeType.ALL,

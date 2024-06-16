@@ -1,12 +1,15 @@
 package com.example.hospitalrecords.hospital.controller;
 
 import com.example.hospitalrecords.hospital.dto.HospitalContactsDto;
+import com.example.hospitalrecords.hospital.dto.HospitalDto;
+import com.example.hospitalrecords.hospital.dto.HospitalInfoDto;
 import com.example.hospitalrecords.hospital.model.HospitalInfo;
 import com.example.hospitalrecords.hospital.service.HospitalService;
 import com.example.hospitalrecords.department.model.Department;
 import com.example.hospitalrecords.hospital.model.Hospital;
 import com.example.hospitalrecords.role.model.RoleType;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -16,36 +19,26 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/hospitals")
-@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/hospitals")
 public class HospitalController {
 
-    //todo landing page controller
     private final HospitalService hospitalService;
 
-    public HospitalController(HospitalService hospitalService) {
-        this.hospitalService = hospitalService;
-    }
-
-    @GetMapping("/welcome")
-    public ResponseEntity<String> welcome(){
-        return ResponseEntity.ok("hello");
-    }
-
     @GetMapping("/description/{id}")
-    public ResponseEntity<String> getHospitalDescription(@PathVariable Long id){
-        return ResponseEntity.ok(hospitalService.findById(id).toString());
+    public HospitalDto getHospitalDescription(@PathVariable Long id){
+        return hospitalService.findById(id);
     }
 
     @GetMapping("/{id}")
-    public Hospital getHospital(@PathVariable Long id){
+    public HospitalDto getHospital(@PathVariable Long id){
         return hospitalService.findById(id);
     }
 
    @GetMapping("/{id}/hospital-info")
-    public HospitalInfo getHospitalInfo(@PathVariable Long id){
-        return hospitalService.findById(id).getHospitalInfo();
+    public HospitalInfoDto getHospitalInfo(@PathVariable Long id){
+        return hospitalService.getHospitalInfo(id);
     }
 
     @GetMapping("/{id}/hospital-contacts")
@@ -54,7 +47,7 @@ public class HospitalController {
     }
 
     @GetMapping()
-    public List<Hospital> findAllHospitals(){
+    public List<HospitalDto> findAllHospitals(){
         return hospitalService.findAll();
     }
 }

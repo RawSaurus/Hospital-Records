@@ -1,18 +1,23 @@
 package com.example.hospitalrecords.hospital.service;
 
 import com.example.hospitalrecords.hospital.dto.HospitalContactsDto;
+import com.example.hospitalrecords.hospital.dto.HospitalDto;
+import com.example.hospitalrecords.hospital.dto.HospitalInfoDto;
 import com.example.hospitalrecords.hospital.mapper.HospitalMapper;
 import com.example.hospitalrecords.hospital.model.Hospital;
 import com.example.hospitalrecords.hospital.model.HospitalInfo;
 import com.example.hospitalrecords.hospital.repository.HospitalInfoRepository;
 import com.example.hospitalrecords.hospital.repository.HospitalRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class HospitalService {
 
@@ -20,33 +25,23 @@ public class HospitalService {
     private final HospitalInfoRepository hospitalInfoRepository;
     private final HospitalMapper hospitalMapper;
 
-    public HospitalService(HospitalRepository hospitalRepository, HospitalInfoRepository hospitalInfoRepository, HospitalMapper hospitalMapper) {
-        this.hospitalRepository = hospitalRepository;
-        this.hospitalInfoRepository = hospitalInfoRepository;
-        this.hospitalMapper = hospitalMapper;
+    public HospitalDto findById(Long id){
+       return hospitalMapper.toHospitalDto(
+                hospitalRepository.findById(id)
+               .orElseThrow(()-> new EntityNotFoundException("Hospital Not Found")));
     }
 
-    public Hospital findById(Long id){
-       return hospitalRepository.findById(id)
-               .orElseThrow(()-> new EntityNotFoundException("Hospital Not Found"));
+    public List<HospitalDto> findAll(){
+        return hospitalRepository.findAll()
+                .stream()
+                .map(hospitalMapper::toHospitalDto)
+                .collect(Collectors.toList());
     }
 
-    public Hospital saveHospital(Hospital hospital){
-        return hospitalRepository.save(hospital);
-    }
-
-    public HospitalInfo postHospitalInfo(String name, HospitalInfo hospitalInfo) {
-        Hospital hospital = hospitalRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Hospital not found"));
-        hospitalInfo.setHospital(hospital);
-        hospitalInfoRepository.save(hospitalInfo);
-        hospital.setHospitalInfo(hospitalInfo);
-        hospitalRepository.save(hospital);
-        return hospitalInfo;
-    }
-
-    public List<Hospital> findAll(){
-        return hospitalRepository.findAll();
+    public HospitalInfoDto getHospitalInfo(Long id){
+        return hospitalMapper.toHospitalInfoDto(hospitalRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Hospital not found"))
+                .getHospitalInfo());
     }
 
     public HospitalContactsDto findContactsByHospitalId(Long id){
@@ -55,40 +50,47 @@ public class HospitalService {
         return hospitalMapper.toHospitalContactsDto(hospital.getHospitalInfo());
     }
 
-    public Hospital updateHospital(Long id, Hospital hospital){
+    public ResponseEntity saveHospital(HospitalDto hospitalDto){
+        hospitalRepository.save(hospitalMapper.toEntity(hospitalDto));
+        return ResponseEntity.ok("Hospital saved");
+    }
+
+    public ResponseEntity postHospitalInfo(String name, HospitalInfoDto hospitalInfoDto) {
+        Hospital hospital = hospitalRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Hospital not found"));
+
+        hospital.setHospitalInfo(hospitalMapper.toEntity(hospitalInfoDto));
+        hospitalRepository.save(hospital);
+        return ResponseEntity.ok("Hospital info saved");
+    }
+
+    public ResponseEntity updateHospital(Long id, HospitalDto hospitalDto){
 
         Hospital updatedHospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Hospital Not Found"));
 
-        updatedHospital.setName(hospital.getName());
+        updatedHospital.setName(hospitalDto.name());
 
-        return hospitalRepository.save(updatedHospital);
+        hospitalRepository.save(updatedHospital);
+        return ResponseEntity.ok("Hospital updated");
     }
 
-    public String deleteHospital(Long id){
+    public ResponseEntity updateHospitalInfo(Long id, HospitalInfoDto dto){
 
-        Hospital deleteHospital = hospitalRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Hospital Not Found"));
-
-        hospitalRepository.delete(deleteHospital);
-
-        return "Hospital deleted successfully";
-    }
-
-    public String deleteHospitalByName(String name){
-
-        Hospital deleteHospital = hospitalRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Hospital Not Found"));
-
-        hospitalRepository.delete(deleteHospital);
-
-        return "Hospital deleted successfully";
-    }
-
-    public String deleteHospitalInfo(String name){
-        Hospital hospital = hospitalRepository.findByName(name)
+        Hospital hospital = hospitalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Hospital not found"));
-        hospitalInfoRepository.delete(hospital.getHospitalInfo());
-        return "Info deleted successfully";
+
+        hospitalMapper.updateToEntity(dto, hospital.getHospitalInfo());
+        hospitalRepository.save(hospital);
+
+        return ResponseEntity.ok("Hospital Info updated");
     }
+
+    public ResponseEntity deleteHospital(Long id){
+
+        hospitalRepository.deleteById(id);
+
+        return ResponseEntity.ok("Hospital deleted");
+    }
+
 }

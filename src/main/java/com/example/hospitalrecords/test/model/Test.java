@@ -24,9 +24,9 @@ public class Test {
     @Enumerated(EnumType.STRING)
     private TestType testType;
     private Date date;
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    @JsonBackReference
-    private Patient patient;
+//    @ManyToOne
+//    @JoinColumn(name = "userId")
+//    @JsonBackReference
+//    private Patient patient;
 
 }

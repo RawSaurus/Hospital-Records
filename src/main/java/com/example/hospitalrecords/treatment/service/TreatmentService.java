@@ -10,6 +10,7 @@ import com.example.hospitalrecords.treatment.model.Treatment;
 import com.example.hospitalrecords.treatment.repository.TreatmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,18 +18,18 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class TreatmentService {
+public class TreatmentService {//works
 
     private final TreatmentRepository treatmentRepository;
     private final PatientRepository patientRepository;
     private final TreatmentMapper treatmentMapper;
 
-    public TreatmentDto getTreatment(Long id, String treatmentType){
+    public TreatmentDto getTreatment(Long id, Long treatmentId){
         return   treatmentMapper.toTreatmentDto(patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found"))
                 .getTreatments()
                 .stream()
-                .filter((Treatment treatment) -> treatment.getTreatmentType().equals(treatmentType))
+                .filter((Treatment treatment) -> treatment.getTreatmentId().equals(treatmentId))
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Test not found")));
     }
@@ -42,19 +43,45 @@ public class TreatmentService {
                 .collect(Collectors.toList());
     }
 
-    public void postTreatment(Long id, TreatmentDto treatmentDto){
+    public ResponseEntity postTreatment(Long id, TreatmentDto treatmentDto){
         Treatment treatment = treatmentMapper.toEntity(treatmentDto);
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
+//        treatment.setPatient(patient);
         patient.getTreatments().add(treatment);
         patientRepository.save(patient);
+
+        return ResponseEntity.ok("Treatment saved");
     }
 
-    public void updateTreatment(Long id, String treatmentType, TreatmentDto treatmentDto){
+    public ResponseEntity updateTreatment(Long id, Long treatmentId, TreatmentDto treatmentDto){
 
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
+
+        for(int i = 0; i<patient.getTreatments().size(); i++){
+            if(patient.getTreatments().get(i).getTreatmentId().equals(treatmentId)) {
+                treatmentMapper.updateToEntity(treatmentDto, patient.getTreatments().get(i));
+                patientRepository.save(patient);
+                break;
+            }
+        }
+        return ResponseEntity.ok("Treatment updated");
     }
 
-    public void deleteTreatment(Long id){
+    public ResponseEntity deleteTreatment(Long id, Long treatmentId){
 
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
+
+        for(int i = 0; i<patient.getTreatments().size(); i++){
+            if(patient.getTreatments().get(i).getTreatmentId().equals(treatmentId)) {
+                patient.getTreatments().remove(i);
+                patientRepository.save(patient);
+                treatmentRepository.deleteById(treatmentId);
+                break;
+            }
+        }
+        return ResponseEntity.ok("Treatment deleted");
     }
 }

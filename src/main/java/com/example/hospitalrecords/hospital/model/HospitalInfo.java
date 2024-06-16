@@ -29,10 +29,6 @@ public class HospitalInfo {
     private String instagram;
     private String facebook;
     @OneToOne
-    @JoinColumn(name = "hospitalId")
-    @JsonBackReference
-    private Hospital hospital;
-    @OneToOne
     @JoinColumn(name = "imageDataId")
     private ImageData ImageData;//logo
 }

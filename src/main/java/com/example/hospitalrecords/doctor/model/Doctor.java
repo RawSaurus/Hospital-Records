@@ -22,7 +22,7 @@ public class Doctor extends User{
     private Set<Department> departments = new HashSet<>();
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "Diagnosis",
+            name = "Doctors_Patients",
             joinColumns = {@JoinColumn(name = "doctorId")},
             inverseJoinColumns = {@JoinColumn(name = "patientId")}
     )

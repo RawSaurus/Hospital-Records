@@ -24,10 +24,9 @@ public class Hospital {
     @Column(unique = true)
     private String name;
     @OneToMany(mappedBy = "hospital")
-    private List<Department> departments;
+    private List<Department> departments;//TODO groups ?
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "hospitalInfoId")
-    @JsonManagedReference
     private HospitalInfo hospitalInfo;
 
 

@@ -1,10 +1,13 @@
 package com.example.hospitalrecords.hospital.controller;
 
+import com.example.hospitalrecords.hospital.dto.HospitalDto;
+import com.example.hospitalrecords.hospital.dto.HospitalInfoDto;
 import com.example.hospitalrecords.hospital.model.Hospital;
 import com.example.hospitalrecords.hospital.model.HospitalInfo;
 import com.example.hospitalrecords.hospital.repository.HospitalRepository;
 import com.example.hospitalrecords.hospital.service.HospitalService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,41 +20,30 @@ public class AdminHospitalController {
 
     @PostMapping()
     @PreAuthorize("hasAuthority('admin:create')")
-    public Hospital postHospital(@RequestBody Hospital hospital){
-        return hospitalService.saveHospital(hospital);
+    public ResponseEntity postHospital(@RequestBody HospitalDto hospitalDto){
+        return hospitalService.saveHospital(hospitalDto);
     }
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('admin:update')")
-    public Hospital updateHospital(@PathVariable Long id, @RequestBody Hospital hospital){
-        return hospitalService.updateHospital(id, hospital);
-    }
-
     @PostMapping("/{name}")
     @PreAuthorize("hasAuthority('admin:create')")
-    public HospitalInfo postHospitalInfo(@PathVariable String name, @RequestBody HospitalInfo hospitalInfo){
-        return hospitalService.postHospitalInfo(name, hospitalInfo);
+    public ResponseEntity postHospitalInfo(@PathVariable String name, @RequestBody HospitalInfoDto hospitalInfoDto){
+        return hospitalService.postHospitalInfo(name, hospitalInfoDto);
     }
-    @PutMapping("/{name}")
+
+    @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
-    public HospitalInfo updateHospitalInfo(@PathVariable String name, @RequestBody HospitalInfo hospitalInfo) {
-        return hospitalService.postHospitalInfo(name, hospitalInfo);
-    }
-    @DeleteMapping("/info/{name}")
-    @PreAuthorize("hasAuthority('admin:delete')")
-    public String deleteHospitalInfo(@PathVariable String name){
-        return hospitalService.deleteHospitalInfo(name);
-
+    public ResponseEntity updateHospital(@PathVariable Long id, @RequestBody HospitalDto hospitalDto){
+        return hospitalService.updateHospital(id, hospitalDto);
     }
 
-    @DeleteMapping("/delete-by-id/{id}")
+    @PutMapping("/{id}/info")
+    @PreAuthorize("hasAuthority('admin:update')")
+    public ResponseEntity updateHospitalInfo(@PathVariable Long id, @RequestBody HospitalInfoDto hospitalInfoDto) {
+        return hospitalService.updateHospitalInfo(id, hospitalInfoDto);
+    }
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
-    public String deleteHospital(@PathVariable Long id){
+    public ResponseEntity deleteHospital(@PathVariable Long id){
         return hospitalService.deleteHospital(id);
-    }
-    @DeleteMapping("/{name}")
-    @PreAuthorize("hasAuthority('admin:delete')")
-    public String deleteHospital2(@PathVariable String name){
-        return hospitalService.deleteHospitalByName(name);
     }
 }
 

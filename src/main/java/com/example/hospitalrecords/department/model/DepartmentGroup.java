@@ -22,7 +22,10 @@ public class DepartmentGroup {
     @OneToOne
     @JoinColumn(name = "imageDataId")
     private ImageData imageData;
-    @OneToMany(mappedBy = "departmentGroup")
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     @JsonManagedReference
     private List<Department> departments;
 

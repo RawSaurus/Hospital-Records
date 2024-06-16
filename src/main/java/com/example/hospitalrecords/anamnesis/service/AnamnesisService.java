@@ -1,5 +1,7 @@
 package com.example.hospitalrecords.anamnesis.service;
 
+import com.example.hospitalrecords.anamnesis.dto.AnamnesisRequestDto;
+import com.example.hospitalrecords.anamnesis.mapper.AnamnesisMapper;
 import com.example.hospitalrecords.anamnesis.model.Anamnesis;
 import com.example.hospitalrecords.anamnesis.repository.AnamnesisRepository;
 import com.example.hospitalrecords.patient.model.Patient;
@@ -13,38 +15,51 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class AnamnesisService {
+public class AnamnesisService {//works
 
     private final AnamnesisRepository anamnesisRepository;
     private final PatientRepository patientRepository;
+    private final AnamnesisMapper anamnesisMapper;
 
-    public Anamnesis getAnamnesis(Long id){
+    public AnamnesisRequestDto getAnamnesis(Long id){
        Patient patient = patientRepository.findById(id)
                .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
-       return patient.getAnamnesis();
+       return anamnesisMapper.toRequestDto(patient.getAnamnesis());
     }
 
-    public Anamnesis postAnamnesis(Long id, Anamnesis anamnesis){//TODO dto
+    public ResponseEntity postAnamnesis(Long id, AnamnesisRequestDto anamnesis){
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
-        anamnesis.setPatient(patient);
-        anamnesisRepository.save(anamnesis);
-        patient.setAnamnesis(anamnesis);
+
+        patient.setAnamnesis(anamnesisMapper.toEntity(anamnesis));
         patientRepository.save(patient);
-        return anamnesis;//todo Validation - one to one - duplicate key
+
+        return ResponseEntity.ok("Anamnesis created");
+        //todo Validation - one to one - duplicate key
     }
 
-    public Anamnesis updateAnamnesis(Long id, Anamnesis anamnesis){
-        //TODO plan out
-        return anamnesis;
+    public ResponseEntity updateAnamnesis(Long id, AnamnesisRequestDto dto){
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
+
+        anamnesisMapper.updateToEntity(dto, patient.getAnamnesis());
+
+        patientRepository.save(patient);
+
+        return ResponseEntity.ok("Anamnesis updated");
     }
 
     public ResponseEntity deleteAnamnesis(Long id){
-        Anamnesis deletedAnamnesis = patientRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Patient not found"))
+
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found"));
+
+        Anamnesis deletedAnamnesis = patient
                 .getAnamnesis();
 
-        anamnesisRepository.delete(deletedAnamnesis);
+        patient.setAnamnesis(null);
+        patientRepository.save(patient);
+        anamnesisRepository.deleteById(deletedAnamnesis.getAnamnesisId());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }

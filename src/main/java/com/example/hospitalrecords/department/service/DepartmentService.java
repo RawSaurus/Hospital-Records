@@ -1,23 +1,20 @@
 package com.example.hospitalrecords.department.service;
 
+import com.example.hospitalrecords.department.dto.DepartmentDto;
+import com.example.hospitalrecords.department.dto.DepartmentGroupDto;
 import com.example.hospitalrecords.department.dto.DepartmentInfoDto;
 import com.example.hospitalrecords.department.mapper.DepartmentMapper;
 import com.example.hospitalrecords.department.model.Department;
 import com.example.hospitalrecords.department.model.DepartmentGroup;
 import com.example.hospitalrecords.department.repository.DepartmentGroupRepository;
 import com.example.hospitalrecords.department.repository.DepartmentRepository;
-import com.example.hospitalrecords.hospital.model.Hospital;
 import com.example.hospitalrecords.validation.ObjectsValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -29,87 +26,83 @@ public class DepartmentService {
     private final DepartmentMapper departmentMapper;
     private final ObjectsValidator<Department> validator;
 
-    public String saveDepartment(Department department){
-        Set<String> violations = validator.validate(department);
-        if(!violations.isEmpty()){
-            return String.join(" | ", violations);
-        }
-        return departmentRepository.save(department).toString();
+
+    public DepartmentDto getDepartment(Long id){
+        return departmentRepository.findById(id)
+                .map(departmentMapper::toDepartmentDto)
+                .orElseThrow(()-> new EntityNotFoundException("Hospital Not Found"));
     }
 
-    public List<DepartmentGroup> getAllDepartmentGroups(){
-        return departmentGroupRepository.findAll();
+    public List<DepartmentGroupDto> getAllDepartmentGroups(){
+        return departmentGroupRepository.findAll()
+                .stream()
+                .map(departmentMapper::toDepartmentGroupDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<DepartmentInfoDto> getAllDepartmentsFromGroup(Long id){
+
+        return departmentGroupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Group Not Found"))
+                .getDepartments()
+                .stream()
+                .map(departmentMapper::toDeptInfoDto)
+                .collect(Collectors.toList());
     }
 
     public DepartmentInfoDto getDepartmentInfo(Long id){
         return departmentRepository.findById(id)
                 .map(departmentMapper::toDeptInfoDto)
-                .orElseThrow(()-> new EntityNotFoundException("Departmetn Not Found"));
+                .orElseThrow(()-> new EntityNotFoundException("Department Not Found"));
     }
 
-    public DepartmentGroup createDepartmentGroup(DepartmentGroup departmentGroup){
-        return departmentGroupRepository.save(departmentGroup);
+    public ResponseEntity saveDepartment(Long departmentGroupId, DepartmentInfoDto departmentInfoDto){
+        DepartmentGroup departmentGroup = departmentGroupRepository.findById(departmentGroupId)
+                        .orElseThrow(() -> new EntityNotFoundException("Department Group not found"));
+        Department department = departmentMapper.toEntity(departmentInfoDto);
+
+        department.setDepartmentGroup(departmentGroup);
+        departmentGroup.getDepartments().add(department);
+        departmentGroupRepository.save(departmentGroup);
+
+        return ResponseEntity.ok("Department Created");
     }
 
-    public DepartmentInfoDto findById(Long id){
-        return departmentRepository.findById(id)
-                .map(departmentMapper::toDeptInfoDto)
-                .orElseThrow(()-> new EntityNotFoundException("Hospital Not Found"));
+    public ResponseEntity createDepartmentGroup(DepartmentGroupDto departmentGroupDto){
+        departmentGroupRepository.save(departmentMapper.toEntity(departmentGroupDto));
+        return ResponseEntity.ok("Department group created");
     }
 
-
-    public List<Department> getAllDepartmentsFromGroup(Long id){//TODO DTO
-
-        return departmentGroupRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Group Not Found"))
-                .getDepartments();
-    }
-
-    public Department updateDepartmentById(Long id, Department department){
+    public ResponseEntity updateDepartmentById(Long id, DepartmentDto departmentDto){
 
         Department updatedDepartment = departmentRepository.findById(id).
                 orElseThrow(() -> new EntityNotFoundException("Department Not Found"));
 
-        updatedDepartment.setName(department.getName());
-        return departmentRepository.save(updatedDepartment);
+        departmentMapper.updateToEntity(departmentDto, updatedDepartment);
+        departmentRepository.save(updatedDepartment);
+
+        return ResponseEntity.ok("Department updated");
     }
 
-    public DepartmentGroup addDepartmentToGroup(Long id, Department department){//TODO not working
-        DepartmentGroup updateGroup = departmentGroupRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
+    public ResponseEntity deleteDepartmentById(Long id, Long departmentId){
 
-        if(!updateGroup.getDepartments().contains(department)){
-            updateGroup.getDepartments().add(department);
-            departmentGroupRepository.save(updateGroup);
-        }else
-            return null;
+        DepartmentGroup departmentGroup= departmentGroupRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Department Group Not Found"));
 
-        return updateGroup;
+        for(int i = 0; i<departmentGroup.getDepartments().size(); i++){
+            if(departmentGroup.getDepartments().get(i).getDeptId().equals(departmentId)){
+                departmentGroup.getDepartments().remove(i);
+                departmentGroupRepository.save(departmentGroup);
+                departmentRepository.deleteById(departmentId);
+                break;
+            }
+        }
+
+        return ResponseEntity.ok("Department Deleted");
     }
 
-    public void removeDepartmentFromGroup(Department department, DepartmentGroup departmentGroup){//TODO not working
-        DepartmentGroup updateGroup = departmentGroupRepository.findById(departmentGroup.getDepartmentGroupId())
-                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
-
-        updateGroup.getDepartments().remove(department);
-    }
-
-    public String deleteDepartmentById(Long id){
-
-        Department deletedDepartment= departmentRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Department Not Found"));
-
-        departmentRepository.delete(deletedDepartment);
-        return "Department deleted successfully";
-    }
-
-    public String deleteDepartment(Department department){
-        departmentRepository.delete(department);
-        return "Department deleted successfully";
-    }
-
-    public String deleteDepartmentGroup(DepartmentGroup departmentGroup){
-        departmentGroupRepository.delete(departmentGroup);
-        return "Department deleted successfully";
+    public ResponseEntity deleteDepartmentGroup(Long id){
+        departmentGroupRepository.deleteById(id);
+        return ResponseEntity.ok("Group deleted");
     }
 }
